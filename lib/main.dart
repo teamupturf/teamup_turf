@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamup_turf/admin/login_screen.dart';
+import 'package:teamup_turf/user/screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
 
         
       ),
-      home:  AdminLoginScreen(),
+      home:  PlaySpotsScreen(),
     );
   }
 }
