@@ -8,9 +8,17 @@ import 'package:teamup_turf/admin/admin_user_management.dart';
 class AdminHomeScreen extends StatelessWidget {
   // Function to navigate to the selected option
   void navigateToOption(BuildContext context, String option) {
-    // Replace with navigation logic based on the option
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Navigating to $option')),
+    );
+  }
+
+  // Function to handle logout
+  void _handleLogout(BuildContext context) {
+    // Logic for logout (e.g., clearing session data)
+    Navigator.pop(context); // Replace with your logout logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Logged out successfully')),
     );
   }
 
@@ -18,7 +26,7 @@ class AdminHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Welcome, Admin",
           style: TextStyle(color: Colors.white),
         ),
@@ -30,7 +38,7 @@ class AdminHomeScreen extends StatelessWidget {
         children: [
           // Background image
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("asset/images/turf-bg.jpg"), // replace with your image asset path
                 fit: BoxFit.cover,
@@ -47,38 +55,31 @@ class AdminHomeScreen extends StatelessWidget {
                   icon: Icons.sports_soccer,
                   label: "Turf management",
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AdminTurfManagementScreen() ,));
-                  }
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AdminTurfManagementScreen()));
+                  },
                 ),
                 _buildAdminOption(
                   context,
                   icon: Icons.people,
                   label: "User management",
                   onTap: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context) {
-                      return UserManagementScreen();
-                    },) );
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserManagementScreen()));
                   },
                 ),
                 _buildAdminOption(
                   context,
                   icon: Icons.star,
-                  label: "Feed back",
+                  label: "Feedback",
                   onTap: () {
-
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AdminFeedbackScreen(),));
-
-
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AdminFeedbackScreen()));
                   },
                 ),
                 _buildAdminOption(
                   context,
                   icon: Icons.payment,
                   label: "Payment management",
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return AdminPaymentManagementScreen();
-                    },));
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AdminPaymentManagementScreen()));
                   },
                 ),
                 _buildAdminOption(
@@ -86,11 +87,15 @@ class AdminHomeScreen extends StatelessWidget {
                   icon: Icons.update,
                   label: "News update",
                   onTap: () {
-
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return NewsUpdateScreen();
-                    },));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NewsUpdateScreen()));
                   },
+                ),
+                // Spacer to push logout button to bottom
+                _buildAdminOption(
+                  context,
+                  icon: Icons.logout,
+                  label: "Logout",
+                  onTap: () => _handleLogout(context),
                 ),
               ],
             ),
@@ -109,8 +114,8 @@ class AdminHomeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.0),
-        padding: EdgeInsets.all(20),
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -119,7 +124,7 @@ class AdminHomeScreen extends StatelessWidget {
               color: Colors.grey.withOpacity(1),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -130,7 +135,7 @@ class AdminHomeScreen extends StatelessWidget {
               color: Colors.green[800],
               size: 25,
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: Text(
                 label,
