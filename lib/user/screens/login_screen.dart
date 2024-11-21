@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup_turf/user/screens/verifynumber_screen.dart';
 
 class PlaySpotsScreen extends StatelessWidget {
   @override
@@ -69,7 +70,9 @@ class PlaySpotsScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>VerificationScreen() ,));
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
