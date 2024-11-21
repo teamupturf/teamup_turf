@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class TurfRegistrationFormState extends StatelessWidget {
+class TurfRegistrationFormState extends StatefulWidget {
+
+  TurfRegistrationFormState({super.key});
+
+  @override
+  State<TurfRegistrationFormState> createState() => _TurfRegistrationFormStateState();
+}
+
+class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _locationController = TextEditingController();
+
   final TextEditingController _phoneController = TextEditingController();
+
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
   final TextEditingController _timeSlotsController = TextEditingController();
+
   XFile? _selectedDocument;
+
   XFile? _selectedLogo;
 
   final ImagePicker _picker = ImagePicker();
-
-  TurfRegistrationFormState({super.key});
 
   Future<void> _pickDocument() async {
     final XFile? document =
