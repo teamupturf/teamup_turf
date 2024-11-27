@@ -4,7 +4,7 @@ class TurfManagementLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white10,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -13,10 +13,10 @@ class TurfManagementLoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
-                "Get Started With Your Fitness Journey",
+                "Let's Play Football!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -44,7 +44,7 @@ class TurfManagementLoginScreen extends StatelessWidget {
                         Icon(Icons.flag, color: Colors.white),
                         SizedBox(width: 4),
                         Text(
-                          "+62",
+                          "+91",
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
@@ -88,7 +88,7 @@ class TurfManagementLoginScreen extends StatelessWidget {
               const Text(
                 "Or",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70, fontSize: 14),
+                style: TextStyle(color: Colors.black, fontSize: 14),
               ),
               const SizedBox(height: 16),
               ElevatedButton.icon(
@@ -127,7 +127,7 @@ class TurfManagementLoginScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text: "By continuing, you agree to our ",
-                  style: const TextStyle(color: Colors.white70),
+                  style: const TextStyle(color: Colors.black),
                   children: [
                     TextSpan(
                       text: "terms of service",

@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TurfRegistrationFormState extends StatefulWidget {
+<<<<<<< HEAD
+  TurfRegistrationFormState({super.key});
+
+  @override
+  State<TurfRegistrationFormState> createState() =>
+      _TurfRegistrationFormStateState();
+=======
 
   TurfRegistrationFormState({super.key});
 
   @override
   State<TurfRegistrationFormState> createState() => _TurfRegistrationFormStateState();
+>>>>>>> 224d828cba60b3b254fe11ce2cd2e03dd8d3bc92
 }
 
 class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
@@ -49,7 +57,7 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.black12,
         title: const Text("Turf Registration"),
       ),
       body: SingleChildScrollView(
@@ -176,15 +184,16 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
               if (_selectedDocument != null)
                 Text(
                   "Selected File: ${_selectedDocument!.name}",
-                  style: const TextStyle(color: Colors.green),
+                  style: const TextStyle(color: Colors.black12),
                 ),
               const SizedBox(height: 16),
               // Logo Upload
+              // Logo Upload Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Upload Logo",
+                    "Upload Logo (Optional)", // Add optional label
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   ElevatedButton(
@@ -193,11 +202,13 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
                   ),
                 ],
               ),
+// Display selected logo if available
               if (_selectedLogo != null)
                 Text(
                   "Selected Logo: ${_selectedLogo!.name}",
-                  style: const TextStyle(color: Colors.green),
+                  style: const TextStyle(color: Colors.black12),
                 ),
+
               const SizedBox(height: 32),
               // Submit Button
               SizedBox(
