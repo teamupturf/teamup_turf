@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup_turf/user/screens/root_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -149,6 +150,9 @@ class ProfileScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return MainScreen();
+                    },));
                     // Action when "Continue" button is pressed
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Profile Information Saved')),
