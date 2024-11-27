@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class TurfRegistrationFormState extends StatelessWidget {
+class TurfRegistrationFormState extends StatefulWidget {
+  TurfRegistrationFormState({super.key});
+
+  @override
+  State<TurfRegistrationFormState> createState() =>
+      _TurfRegistrationFormStateState();
+}
+
+class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _locationController = TextEditingController();
+
   final TextEditingController _phoneController = TextEditingController();
+
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
   final TextEditingController _timeSlotsController = TextEditingController();
+
   XFile? _selectedDocument;
+
   XFile? _selectedLogo;
 
   final ImagePicker _picker = ImagePicker();
-
-  TurfRegistrationFormState({super.key});
 
   Future<void> _pickDocument() async {
     final XFile? document =
@@ -35,7 +49,7 @@ class TurfRegistrationFormState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.black12,
         title: const Text("Turf Registration"),
       ),
       body: SingleChildScrollView(
@@ -162,15 +176,16 @@ class TurfRegistrationFormState extends StatelessWidget {
               if (_selectedDocument != null)
                 Text(
                   "Selected File: ${_selectedDocument!.name}",
-                  style: const TextStyle(color: Colors.green),
+                  style: const TextStyle(color: Colors.black12),
                 ),
               const SizedBox(height: 16),
               // Logo Upload
+              // Logo Upload Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Upload Logo",
+                    "Upload Logo (Optional)", // Add optional label
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   ElevatedButton(
@@ -179,11 +194,13 @@ class TurfRegistrationFormState extends StatelessWidget {
                   ),
                 ],
               ),
+// Display selected logo if available
               if (_selectedLogo != null)
                 Text(
                   "Selected Logo: ${_selectedLogo!.name}",
-                  style: const TextStyle(color: Colors.green),
+                  style: const TextStyle(color: Colors.black12),
                 ),
+
               const SizedBox(height: 32),
               // Submit Button
               SizedBox(
