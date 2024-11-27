@@ -17,13 +17,13 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile Logo Section
-              Center(
-                child: Image.asset(
-                  'assets/profile_logo.png', // Replace with your profile logo
-                  height: 100,
-                  width: 100,
-                ),
-              ),
+              // Center(
+              //   child: Image.asset(
+              //     'assets/profile_logo.png', // Replace with your profile logo
+              //     height: 100,
+              //     width: 100,
+              //   ),
+              // ),
               const SizedBox(height: 24),
 
               // Username Section

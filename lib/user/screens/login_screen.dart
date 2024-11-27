@@ -14,10 +14,10 @@ class PlaySpotsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Logo Section
-                Image.asset(
-                  'assets/logo.png', // Replace with your logo asset path
-                  height: 80,
-                ),
+                // Image.asset(
+                //   'assets/logo.png', // Replace with your logo asset path
+                //   height: 80,
+                // ),
                 const SizedBox(height: 16),
                 const Text(
                   'Play Spots',
@@ -92,13 +92,13 @@ class PlaySpotsScreen extends StatelessWidget {
                   style: TextStyle(color: Colors.black54, fontSize: 14),
                 ),
                 const SizedBox(height: 16),
-                // Continue with Google Button
+                
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () {},
                     icon: Image.asset(
-                      'assets/google_icon.png', // Replace with your Google icon asset path
+                      'asset/images/search.png', // Replace with your Google icon asset path
                       height: 24,
                     ),
                     label: const Text(
@@ -114,6 +114,8 @@ class PlaySpotsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              
+              
               ],
             ),
           ),
