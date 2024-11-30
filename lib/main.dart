@@ -23,11 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-<<<<<<< HEAD
-      home:  PlaySpotsScreen(),
-=======
       home: MainScreen(),
->>>>>>> a2dbfd99a997367a795a7bb6bdf93a3a699bd23a
     );
   }
 }

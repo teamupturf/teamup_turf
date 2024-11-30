@@ -1,6 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,88 +11,75 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _currentLocation = "Fetching location...";
+  int _currentIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _getCurrentLocation();
-  }
+  // Dummy data for carousel and nearby turfs
+  final List<String> bannerImages = [
+    'https://via.placeholder.com/400x200',
+    'https://via.placeholder.com/400x200/ff7f7f',
+    'https://via.placeholder.com/400x200/87ceeb',
+  ];
 
-  Future<void> _getCurrentLocation() async {
-    try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        setState(() {
-          _currentLocation = "Location services are disabled.";
-        });
-        return;
-      }
+  final List<Map<String, String>> nearbyTurfs = [
+    {
+      'name': 'Game On',
+      'location': 'East Nadakkavu',
+      'image': 'https://via.placeholder.com/150x100/4caf50',
+      'sports': '⚽ +1 more' // Only football sport
+    },
+    {
+      'name': 'Redrockz Football Ground',
+      'location': 'Opp Malabar Eye Hospital, Eranhipalam',
+      'image': 'https://via.placeholder.com/150x100/ff5722',
+      'sports': '⚽' // Only football sport
+    },
+  ];
 
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          setState(() {
-            _currentLocation = "Location permission denied.";
-          });
-          return;
-        }
-      }
+  // Pages for bottom navigation
+  final List<Widget> _pages = [
+    const HomePageContent(),
+    const BookingsPage(),
+    const MessagesPage(),
+    const ProfilePage(),
+  ];
 
-      if (permission == LocationPermission.deniedForever) {
-        setState(() {
-          _currentLocation = "Location permissions are permanently denied.";
-        });
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition();
-      setState(() {
-        _currentLocation = "${position.latitude}, ${position.longitude}";
-      });
-    } catch (e) {
-      setState(() {
-        _currentLocation = "Error fetching location.";
-      });
-    }
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> bannerImages = [
-      'https://via.placeholder.com/400x200',
-      'https://via.placeholder.com/400x200/ff7f7f',
-      'https://via.placeholder.com/400x200/87ceeb',
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Row(
-          children: [
-            Icon(Icons.location_on, color: Colors.white),
-            SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                _currentLocation,
-                style: TextStyle(fontSize: 16),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+        title: const Text(
+          'TEAMUP TURF',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        backgroundColor: Colors.teal,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {
-              // Handle notification click
-              print("Notification clicked");
+              // Handle notifications
             },
           ),
         ],
       ),
-      body: Column(
+      body:HomePageContent() ,);
+  
+  }
+}
+
+class HomePageContent extends StatelessWidget {
+  const HomePageContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Carousel Slider
           CarouselSlider(
@@ -102,13 +90,17 @@ class _HomeScreenState extends State<HomeScreen> {
               aspectRatio: 16 / 9,
               viewportFraction: 0.8,
             ),
-            items: bannerImages.map((image) {
+            items: [
+              'https://via.placeholder.com/400x200',
+              'https://via.placeholder.com/400x200/ff7f7f',
+              'https://via.placeholder.com/400x200/87ceeb',
+            ].map((image) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius:  BorderRadius.circular(10),
                       image: DecorationImage(
                         image: NetworkImage(image),
                         fit: BoxFit.cover,
@@ -119,16 +111,134 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }).toList(),
           ),
-          SizedBox(height: 16),
-          Expanded(
-            child: Center(
-              child: Text(
-                'Other content goes here',
-                style: TextStyle(fontSize: 18),
-              ),
+          const SizedBox(height: 16),
+          // Nearby Grounds Section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'Nearby Grounds',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'View All',
+                  style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+               
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
+      ),
+    );
+  }
+}
+
+class TurfCard extends StatelessWidget {
+  final Map<String, String> turf;
+  const TurfCard({super.key, required this.turf});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      width: 220,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            child: Image.network(
+              turf['image']!,
+              width: double.infinity,
+              height: 120,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              turf['name']!,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(turf['location']!),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: Text(turf['sports']!), // Only football sport
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BookingsPage extends StatelessWidget {
+  const BookingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Your Booking Information Goes Here',
+        style: TextStyle(fontSize: 18, color: Colors.teal),
+      ),
+    );
+  }
+}
+
+class MessagesPage extends StatelessWidget {
+  const MessagesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Messages Section',
+        style: TextStyle(fontSize: 18, color: Colors.teal),
+      ),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'User Profile Section',
+        style: TextStyle(fontSize: 18, color: Colors.teal),
       ),
     );
   }
