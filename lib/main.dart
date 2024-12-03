@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teamup_turf/admin/login_screen.dart';
 import 'package:teamup_turf/turf/screens/turf%20registration.dart';
+import 'package:teamup_turf/turf/screens/turf_details.dart';
 import 'package:teamup_turf/user/screens/login_screen.dart';
 import 'package:teamup_turf/user/screens/root_screen.dart';
 
@@ -23,11 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-<<<<<<< HEAD
-      home:  PlaySpotsScreen(),
-=======
-      home: MainScreen(),
->>>>>>> a2dbfd99a997367a795a7bb6bdf93a3a699bd23a
+      home: TurfDetailsScreen(),
     );
   }
 }
