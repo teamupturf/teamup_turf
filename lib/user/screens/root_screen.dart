@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamup_turf/user/screens/home_screen.dart';
+import 'package:teamup_turf/user/screens/profile.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _MainScreenState extends State<MainScreen> {
   // Screens for each BottomNavigationBarItem
   final List<Widget> _screens = [
     HomeScreen(),
-      Scaffold(),
+   ProfileScreen(),
       Scaffold(),
      Scaffold(),
       Scaffold(),
@@ -44,13 +45,14 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.place),
             label: 'Spot',
           ),
+          
           BottomNavigationBarItem(
-            icon: Icon(Icons.meeting_room),
-            label: 'Meet',
+            icon: Icon(Icons.local_offer),
+            label: 'Messages',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_offer),
-            label: 'Offers',
+            label: 'News',
           ),
         ],
       ),

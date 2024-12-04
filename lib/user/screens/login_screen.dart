@@ -51,7 +51,7 @@ class PlaySpotsScreen extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.flag, color: Colors.blue),
+                          const Icon(Icons.flag, color: Color.fromARGB(255, 33, 243, 124)),
                           const SizedBox(width: 8),
                           const Text(
                             '+91',

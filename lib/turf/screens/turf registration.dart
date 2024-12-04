@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TurfRegistrationFormState extends StatefulWidget {
+<<<<<<< HEAD
   TurfRegistrationFormState({super.key});
 
   @override
   State<TurfRegistrationFormState> createState() =>
       _TurfRegistrationFormStateState();
+=======
+
+  TurfRegistrationFormState({super.key});
+
+  @override
+  State<TurfRegistrationFormState> createState() => _TurfRegistrationFormStateState();
+>>>>>>> 57b34965fb995c766855873362ce5b447b97e2c2
 }
 
 class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
