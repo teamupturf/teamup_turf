@@ -45,13 +45,14 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.place),
             label: 'Spot',
           ),
+          
           BottomNavigationBarItem(
-            icon: Icon(Icons.meeting_room),
-            label: 'Meet',
+            icon: Icon(Icons.local_offer),
+            label: 'Messages',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_offer),
-            label: 'Offers',
+            label: 'News',
           ),
         ],
       ),

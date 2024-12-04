@@ -128,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       children: [
                         Radio<String>(
-                          value: 'Other',
+                          value: 'Others',
                           groupValue: _selectedGender,
                           onChanged: (value) {
                             setState(() {
@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             });
                           },
                         ),
-                        const Text('Other', style: TextStyle(color: Colors.white)),
+                        const Text('Others', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                   ],

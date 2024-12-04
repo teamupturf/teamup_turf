@@ -4,6 +4,8 @@ import 'package:teamup_turf/turf/screens/turf%20registration.dart';
 import 'package:teamup_turf/user/screens/login_screen.dart';
 import 'package:teamup_turf/user/screens/root_screen.dart';
 
+import 'package:teamup_turf/user/screens/uat.dart';
+
 import 'turf/screens/login_screen.dart';
 import 'turf/screens/turf_homepage.dart';
 
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainScreen(),
+      home: RoleSelectionScreen(),
     );
   }
 }
