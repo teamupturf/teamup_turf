@@ -23,16 +23,7 @@ class TurfHomePage extends StatelessWidget {
           itemBuilder: (context, index) {
             if (index == 4) {
               // Chatting button
-              return _buildFeatureCard(
-                context,
-                title: 'Chatting',
-                icon: Icons.chat,
-                color: Colors.red,
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ChattingPage()),
-                ),
-              );
+              return null;
             } else {
               // Other feature cards
               return _buildFeatureCard(
