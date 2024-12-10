@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:teamup_turf/admin/login_screen.dart';
+import 'package:teamup_turf/splash_screen.dart';
 import 'package:teamup_turf/turf/screens/turf%20registration.dart';
+import 'package:teamup_turf/turf/screens/turf_booking.dart';
 import 'package:teamup_turf/turf/screens/turf_details.dart';
 import 'package:teamup_turf/turf/screens/turf_edit.dart';
 import 'package:teamup_turf/user/screens/login_screen.dart';
@@ -27,11 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-<<<<<<< HEAD
-      home: EditPageWithFields(),
-=======
-      home: RoleSelectionScreen(),
->>>>>>> 57b34965fb995c766855873362ce5b447b97e2c2
+      home: SplashScreen(),
     );
   }
 }
