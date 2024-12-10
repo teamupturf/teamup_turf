@@ -104,8 +104,8 @@ class BannerCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<String> bannerImages = [
-      'https://via.placeholder.com/400x200',
-      'https://via.placeholder.com/400x200/ff7f7f',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR86JwAGpII4DI79L0X45S1L71_mNNyJ3dC2A&s',
+      'https://content.jdmagicbox.com/v2/comp/kolkata/w3/033pxx33.xx33.240126100542.p7w3/catalogue/inside-out-turf-sodepur-kolkata-sports-clubs-eskdy5lmf1.jpg',
       'https://via.placeholder.com/400x200/87ceeb',
     ];
     return Padding(

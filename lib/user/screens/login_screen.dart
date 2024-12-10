@@ -60,14 +60,12 @@ class PlaySpotsScreen extends StatelessWidget {
                           const SizedBox(width: 8),
                           const VerticalDivider(color: Colors.grey, width: 1),
                           const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              keyboardType: TextInputType.phone,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Phone number',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
+                          TextField(
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Phone number',
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ],

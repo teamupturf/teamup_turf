@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:teamup_turf/admin/admin_home_screen.dart';
+import 'package:teamup_turf/turf/screens/turf_homepage.dart';
+import 'package:teamup_turf/user/screens/home_screen.dart';
+import 'package:teamup_turf/user/screens/login_screen.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
   @override
@@ -53,7 +57,8 @@ class RoleSelectionScreen extends StatelessWidget {
                       color: Colors.green,
                       onPressed: () {
                         // Handle navigation for User
-                        Navigator.pushNamed(context, '/userHome');
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => PlaySpotsScreen(),));
+                       
                       },
                     ),
                     SizedBox(height: 20), // Space between cards
@@ -65,7 +70,7 @@ class RoleSelectionScreen extends StatelessWidget {
                       color: Colors.orange,
                       onPressed: () {
                         // Handle navigation for Admin
-                        Navigator.pushNamed(context, '/adminHome');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AdminHomeScreen(),));
                       },
                     ),
                     SizedBox(height: 20), // Space between cards
@@ -77,7 +82,7 @@ class RoleSelectionScreen extends StatelessWidget {
                       color: Colors.purple,
                       onPressed: () {
                         // Handle navigation for Turf Manager
-                        Navigator.pushNamed(context, '/turfHome');
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => TurfHomePage(),));
                       },
                     ),
                   ],
