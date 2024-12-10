@@ -1,200 +1,159 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(AttractiveBookingApp());
+void main() {
+  runApp(const MyApp());
+}
 
-class AttractiveBookingApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Booking Manager',
-      theme: ThemeData(primarySwatch: Colors.teal),
-      home: BookingManagementPage(),
+      title: 'Turf Booking',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: TurfListScreen(),
     );
   }
 }
 
-class BookingManagementPage extends StatefulWidget {
-  @override
-  _BookingManagementPageState createState() => _BookingManagementPageState();
+class Turf {
+  final String name;
+  final String location;
+  List<Booking> bookings = [];
+
+  Turf({required this.name, required this.location});
 }
 
-class _BookingManagementPageState extends State<BookingManagementPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
+class Booking {
+  final String userName;
+  final String timeSlot;
 
-  List<Map<String, String>> bookings = [];
+  Booking({required this.userName, required this.timeSlot});
+}
 
-  void addOrUpdateBooking({int? index}) {
-    if (nameController.text.isNotEmpty &&
-        dateController.text.isNotEmpty &&
-        timeController.text.isNotEmpty) {
-      setState(() {
-        if (index == null) {
-          bookings.add({
-            'name': nameController.text,
-            'date': dateController.text,
-            'time': timeController.text,
-          });
-        } else {
-          bookings[index] = {
-            'name': nameController.text,
-            'date': dateController.text,
-            'time': timeController.text,
-          };
-        }
-      });
-      nameController.clear();
-      dateController.clear();
-      timeController.clear();
-      Navigator.of(context).pop();
-    }
-  }
+class TurfListScreen extends StatelessWidget {
+  TurfListScreen({super.key});
 
-  void showBookingDialog({int? index}) {
-    if (index != null) {
-      nameController.text = bookings[index]['name']!;
-      dateController.text = bookings[index]['date']!;
-      timeController.text = bookings[index]['time']!;
-    } else {
-      nameController.clear();
-      dateController.clear();
-      timeController.clear();
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(index == null ? 'Add Booking' : 'Edit Booking'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: dateController,
-                  decoration: InputDecoration(
-                    labelText: 'Date (e.g., 2024-12-25)',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: timeController,
-                  decoration: InputDecoration(
-                    labelText: 'Time (e.g., 5:00 PM)',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () => addOrUpdateBooking(index: index),
-              child: Text(index == null ? 'Add' : 'Update'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void deleteBooking(int index) {
-    setState(() {
-      bookings.removeAt(index);
-    });
-  }
+  final List<Turf> turfs = [
+    Turf(name: 'Turf A', location: 'Location 1'),
+    Turf(name: 'Turf B', location: 'Location 2'),
+    Turf(name: 'Turf C', location: 'Location 3'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Manage Bookings'),
-        centerTitle: true,
-        elevation: 0,
+        title: const Text('Available Turfs'),
+        elevation: 4,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(8.0),
+        itemCount: turfs.length,
+        itemBuilder: (context, index) {
+          final turf = turfs[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            elevation: 6,
+            child: ListTile(
+              contentPadding: const EdgeInsets.all(16.0),
+              leading: Icon(
+                Icons.sports_soccer,
+                size: 40,
+                color: Colors.green,
+              ),
+              title: Text(
+                turf.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              subtitle: Text(
+                turf.location,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TurfBookingsScreen(turf: turf),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class TurfBookingsScreen extends StatelessWidget {
+  final Turf turf;
+  const TurfBookingsScreen({super.key, required this.turf});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Bookings for ${turf.name}'),
+        elevation: 4,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton.icon(
-              onPressed: () => showBookingDialog(),
-              icon: Icon(Icons.add),
-              label: Text('Add Booking'),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                backgroundColor: Colors.teal,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+            const Text(
+              'User Bookings:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            // Display Bookings
             Expanded(
-              child: bookings.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No bookings yet!',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
+              child: turf.bookings.isEmpty
+                  ? const Center(child: Text('No bookings yet.'))
                   : ListView.builder(
-                      itemCount: bookings.length,
+                      itemCount: turf.bookings.length,
                       itemBuilder: (context, index) {
+                        final booking = turf.bookings[index];
                         return Card(
-                          elevation: 5,
-                          margin: EdgeInsets.symmetric(vertical: 8),
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
+                          elevation: 4,
                           child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.teal,
-                              child: Icon(Icons.calendar_today,
-                                  color: Colors.white),
+                            contentPadding: const EdgeInsets.all(16.0),
+                            leading: Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.green,
                             ),
                             title: Text(
-                              bookings[index]['name']!,
+                              booking.userName,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
                               ),
                             ),
                             subtitle: Text(
-                              'Date: ${bookings[index]['date']}\nTime: ${bookings[index]['time']}',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.blue),
-                                  onPressed: () =>
-                                      showBookingDialog(index: index),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => deleteBooking(index),
-                                ),
-                              ],
+                              'Time Slot: ${booking.timeSlot}',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
                             ),
                           ),
                         );

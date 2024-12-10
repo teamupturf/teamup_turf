@@ -49,7 +49,7 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black12,
+        backgroundColor: Colors.green[700],
         title: const Text("Turf Registration"),
       ),
       body: SingleChildScrollView(
@@ -60,103 +60,157 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Name Field
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: "Name",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter the turf name";
-                  }
-                  return null;
-                },
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      labelText: "Name",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter the turf name";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               // Location Field
-              TextFormField(
-                controller: _locationController,
-                decoration: const InputDecoration(
-                  labelText: "Location",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.location_on),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter the location";
-                  }
-                  return null;
-                },
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _locationController,
+                    decoration: const InputDecoration(
+                      labelText: "Location",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.location_on),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter the location";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               // Phone Number Field
-              TextFormField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  labelText: "Phone Number",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.phone),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter the phone number";
-                  }
-                  return null;
-                },
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      labelText: "Phone Number",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.phone),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter the phone number";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               // Email Field
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter an email address";
-                  }
-                  return null;
-                },
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: "Email",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter an email address";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               // Password Field
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) {
-                  if (value == null || value.length < 6) {
-                    return "Password must be at least 6 characters";
-                  }
-                  return null;
-                },
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: "Password",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.length < 6) {
+                        return "Password must be at least 6 characters";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               // Time Slots Field
-              TextFormField(
-                controller: _timeSlotsController,
-                decoration: const InputDecoration(
-                  labelText: "Available Time Slots",
-                  hintText: "e.g., 8 AM - 10 PM",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.access_time),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter the available time slots";
-                  }
-                  return null;
-                },
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _timeSlotsController,
+                    decoration: const InputDecoration(
+                      labelText: "Available Time Slots",
+                      hintText: "e.g., 8 AM - 10 PM",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.access_time),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter the available time slots";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               // Document Upload
@@ -169,6 +223,9 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
                   ),
                   ElevatedButton(
                     onPressed: _pickDocument,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[700],
+                    ),
                     child: const Text("Choose File"),
                   ),
                 ],
@@ -180,27 +237,27 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
                 ),
               const SizedBox(height: 16),
               // Logo Upload
-              // Logo Upload Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Upload Logo (Optional)", // Add optional label
+                    "Upload Logo (Optional)",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   ElevatedButton(
                     onPressed: _pickLogo,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[700],
+                    ),
                     child: const Text("Choose Logo"),
                   ),
                 ],
               ),
-// Display selected logo if available
               if (_selectedLogo != null)
                 Text(
                   "Selected Logo: ${_selectedLogo!.name}",
                   style: const TextStyle(color: Colors.black12),
                 ),
-
               const SizedBox(height: 32),
               // Submit Button
               SizedBox(
@@ -208,7 +265,7 @@ class _TurfRegistrationFormStateState extends State<TurfRegistrationFormState> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.green[700],
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
