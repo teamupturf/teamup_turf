@@ -12,60 +12,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: Colors.white,
       
-      appBar: AppBar(
-        title: const Text(
-          'TEAMUP TURF',
-          style: TextStyle(fontWeight: FontWeight.bold),
+      
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 50),
+            BannerCarousel(),
+            const SizedBox(height: 30), // Increased spacing between sections
+            NearbyAndRequests(),
+            const SizedBox(height: 30), // Space before Quick Book section
+            QuickBookSection(),
+            const SizedBox(height: 40), // Extra space at the bottom for better layout
+          ],
         ),
-        backgroundColor: Colors.teal,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // Handle notifications
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: const [
-          SearchBar(),
-          BannerCarousel(),
-          SizedBox(height: 10), // Consistent spacing
-          Expanded(
-            child: NearbyAndRequests(), // Combines Nearby Grounds and Team Requests
-          ),
-          SizedBox(height: 10), // Space before Quick Book section
-          QuickBookSection(),
-        ],
-      ),
-    );
-  }
-}
-
-class SearchBar extends StatelessWidget {
-  const SearchBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Search for turfs, locations, amenities...',
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          fillColor: Colors.grey.shade200,
-          filled: true,
-        ),
-        onChanged: (value) {
-          // Handle search functionality here
-        },
       ),
     );
   }
@@ -76,22 +37,26 @@ class QuickBookSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0), // Consistent horizontal padding
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Colors.teal, Colors.green]),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: TextButton(
-          onPressed: () {
-            // Navigate to booking page
-          },
-          child: const Text(
-            'Quick Book a Turf Now!',
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [Colors.green, Colors.greenAccent]),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
+        ],
+      ),
+      child: TextButton(
+        onPressed: () {
+          // Navigate to booking page
+        },
+        child: const Text(
+          'Quick Book a Turf Now!',
+          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -111,23 +76,31 @@ class BannerCarousel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
-        height: 150,
+        height: 180,
         child: CarouselSlider(
           options: CarouselOptions(
-            height: 150.0,
+            height: 180.0,
             autoPlay: true,
             enlargeCenterPage: true,
-            viewportFraction: 0.9,
+            viewportFraction: 0.85,
           ),
           items: bannerImages.map((image) {
             return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 6),
+              margin: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
                 image: DecorationImage(
                   image: NetworkImage(image),
-                  fit: BoxFit.cover,
+
+                  fit: BoxFit.fitWidth,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
               ),
             );
           }).toList(),
@@ -137,67 +110,68 @@ class BannerCarousel extends StatelessWidget {
   }
 }
 
+
 class NearbyAndRequests extends StatelessWidget {
   const NearbyAndRequests({super.key});
 
   @override
   Widget build(BuildContext context) {
-        return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Nearby Grounds Section
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Nearby Grounds',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            'Nearby Grounds',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
+            textAlign: TextAlign.left, // Align text to the left
           ),
-          const SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(3, (index) {
-                return NearbyGroundCard(
-                  turf: {
-                    'name': 'Turf ${index + 1}',
-                    'location': 'Location ${index + 1}',
-                    'image': 'https://via.placeholder.com/150x100',
-                    'sports': '⚽ +2 sports',
-                  },
-                );
-              }),
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Team Requests Section
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Team Requests',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 10),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 3, // Example team requests
-            itemBuilder: (context, index) {
-              return TeamRequestCard(
-                request: {
-                  'captain': 'Captain ${index + 1}',
-                  'message': 'Looking for 2 more players for football.',
+        ),
+        const SizedBox(height: 20),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(3, (index) {
+              return NearbyGroundCard(
+                turf: {
+                  'name': 'Turf ${index + 1}',
+                  'location': 'Location ${index + 1}',
+                  'image': 'https://via.placeholder.com/150x100',
+                  'sports': '⚽ +2 sports',
                 },
               );
-            },
+            }),
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 30),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            'Team Requests',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
+            textAlign: TextAlign.left, // Align text to the left
+          ),
+        ),
+        const SizedBox(height: 20),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 3, // Example team requests
+          itemBuilder: (context, index) {
+            return TeamRequestCard(
+              request: {
+                'captain': 'Captain ${index + 1}',
+                'message': 'Looking for 2 more players for football.',
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }
+
+
 
 class NearbyGroundCard extends StatelessWidget {
   final Map<String, String> turf;
@@ -206,16 +180,19 @@ class NearbyGroundCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      width: 200,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      width: 180,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
         color: Colors.white,
+        border: Border.all(
+          color: Colors.green
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.3),
-            blurRadius: 5,
-            offset: const Offset(0, 3),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -224,30 +201,36 @@ class NearbyGroundCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
             ),
             child: Image.network(
               turf['image']!,
               width: double.infinity,
-              height: 100,
+              height: 120,
               fit: BoxFit.cover,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(12.0),
             child: Text(
               turf['name']!,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(turf['location']!),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Text(
+              turf['location']!,
+              style: const TextStyle(color: Colors.black54),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: Text(turf['sports']!),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+            child: Text(
+              turf['sports']!,
+              style: const TextStyle(color: Colors.black54),
+            ),
           ),
         ],
       ),
@@ -262,42 +245,37 @@ class TeamRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.teal.shade50,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.teal.shade300),
+          color: Colors.green.shade50, // Light green background for requests
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.green.shade300),
         ),
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.group, color: Colors.teal),
-            const SizedBox(width: 10),
+            const Icon(Icons.group, color: Colors.green, size: 30),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Request from ${request['captain']}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    request['message']!,
-                    style: const TextStyle(color: Colors.black87),
-                  ),
+                  const SizedBox(height: 8),
+                  Text(request['message']!),
                 ],
               ),
             ),
+            const SizedBox(width: 8),
+            const Icon(Icons.arrow_forward, color: Colors.green),
           ],
         ),
       ),
     );
   }
 }
-

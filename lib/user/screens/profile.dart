@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamup_turf/user/screens/root_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -265,9 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Save and navigate
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Profile Information Saved')),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(),));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
