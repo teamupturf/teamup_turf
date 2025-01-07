@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamup_turf/admin/admin_turf_details_screen.dart';
+import 'package:teamup_turf/admin/services/admin_api_services.dart';
 
 class AdminTurfManagementScreen extends StatefulWidget {
   @override
@@ -51,54 +52,73 @@ class _AdminTurfManagementScreenState extends State<AdminTurfManagementScreen>
   }
 }
 
-class TurfListTab extends StatelessWidget {
+class TurfListTab extends StatefulWidget {
   final String status;
 
   TurfListTab({required this.status});
 
   @override
-  Widget build(BuildContext context) {
-    // Replace this with actual data from your database
-    List<Map> turfList = [
-      {
-        'name': 'Green Field Turf',
-        'location': 'Bangalore',
-        'contact': '1234567890',
-        'imageUrl': 'https://via.placeholder.com/150',
-        'documentUrl': 'https://example.com/document.pdf',
-        'fair': '₹500/hour',
-        'timeSlots': ['9:00 AM - 11:00 AM', '1:00 PM - 3:00 PM'],
-      },
-      {
-        'name': 'Sports Arena Turf',
-        'location': 'Mumbai',
-        'contact': '0987654321',
-        'imageUrl': 'https://via.placeholder.com/150',
-        'documentUrl': 'https://example.com/document.pdf',
-        'fair': '₹700/hour',
-        'timeSlots': ['10:00 AM - 12:00 PM', '4:00 PM - 6:00 PM'],
-      },
-    ];
+  _TurfListTabState createState() => _TurfListTabState();
+}
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: turfList.length,
-      itemBuilder: (context, index) {
-        final turf = turfList[index];
-        return TurfCard(
-          name: turf['name']!,
-          location: turf['location']!,
-          contact: turf['contact']!,
-          imageUrl: turf['imageUrl']!,
-          documentUrl: turf['documentUrl']!,
-          fair: turf['fair']!,
-          timeSlots: turf['timeSlots'] as List<String>,
-          status: status,
+class _TurfListTabState extends State<TurfListTab> {
+  late Future<List<dynamic>> turfListFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    turfListFuture = AdminApiServices().getTurfs(status: widget.status.toLowerCase());
+  }
+
+  void _updateTurfList() {
+    setState(() {
+      turfListFuture = AdminApiServices().getTurfs(status: widget.status.toLowerCase());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<dynamic>>(
+      future: turfListFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text("Error loading turfs"));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text("No turfs available"));
+        }
+
+        final turfList = snapshot.data!;
+        return ListView.builder(
+          padding: const EdgeInsets.all(16.0),
+          itemCount: turfList.length,
+          itemBuilder: (context, index) {
+            final turf = turfList[index];
+            return TurfCard(
+              name: turf['turfName'] ?? 'N/A',
+              location: turf['location'] ?? 'N/A',
+              contact: turf['contact'] ?? 'N/A',
+              imageUrl: (turf['imageUrl'] as List?)?.isNotEmpty ?? false
+                  ? turf['imageUrl'][0]
+                  : 'https://via.placeholder.com/150',
+              documentUrl: (turf['documentUrl'] as List?)?.isNotEmpty ?? false
+                  ? turf['documentUrl'][0]
+                  : 'https://via.placeholder.com/150',
+              fair: turf['fair'] ?? 'N/A',
+              timeSlots: [],
+              status: widget.status,
+              turfId: turf['loginId'],
+              onTurfUpdated: _updateTurfList, // Pass the update function
+            );
+          },
         );
       },
     );
   }
 }
+
+
 
 class TurfCard extends StatelessWidget {
   final String name;
@@ -109,6 +129,8 @@ class TurfCard extends StatelessWidget {
   final String fair;
   final List<String> timeSlots;
   final String status;
+  final String turfId;
+  final Function() onTurfUpdated; // Callback to trigger UI refresh
 
   TurfCard({
     required this.name,
@@ -119,24 +141,24 @@ class TurfCard extends StatelessWidget {
     required this.fair,
     required this.timeSlots,
     required this.status,
+    required this.turfId,
+    required this.onTurfUpdated,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TurfDetailsScreen(
-              name: name,
-              location: location,
-              contact: contact,
-              imageUrl: imageUrl,
-              documentUrl: documentUrl,
-              fair: fair,
-              timeSlots: timeSlots, distance: 19, rating: 5, amenities: [
-                'hi'
-              ],
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TurfDetailsScreen(
+              turfId: turfId,
+              timeSlots: timeSlots,
+              amenities: ['hi'],
             ),
-          ),);
+          ),
+        );
       },
       child: Card(
         margin: const EdgeInsets.only(bottom: 16.0),
@@ -205,60 +227,63 @@ class TurfCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              // Add Accept and Reject buttons below
               if (status == "Pending")
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {
-                          // Handle accept action
+                        onPressed: ()async {
+                          String result = await AdminApiServices().approveTurf(turfId: turfId);
+                          onTurfUpdated(); // Trigger the UI update
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Turf accepted!")),
+                            SnackBar(content: Text(result)),
                           );
                         },
                         style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                              color: Colors.green,
-                            ),
-                            
-                            shape:
-                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)
-                                 ) // Accept button color
-                            ),
-                        child: const Text("Accept",style: TextStyle(
-                              color: Colors.green,
-                            ),),
+                          side: const BorderSide(
+                            color: Colors.green,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: const Text(
+                          "Accept",
+                          style: TextStyle(
+                            color: Colors.green,
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {
-                          // Handle accept action
+                        onPressed: () async{
+                          String result = await AdminApiServices().rejectTurf(turfId: turfId);
+                          onTurfUpdated();
+                          // Handle reject action
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Turf rejected!")),
+                             SnackBar(content: Text(result)),
                           );
                         },
                         style: OutlinedButton.styleFrom(
-                            textStyle: const TextStyle(
-                              color: Colors.red,
-                            ),
-                            side: const BorderSide(
-                              color: Colors.red,
-                            ),
-                            shape:
-                                 RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)
-                                ) // Accept button color
-                            ),
-                        child: const Text("Reject",style: TextStyle(
-                              color: Colors.red,
-                            ),),
+                          textStyle: const TextStyle(
+                            color: Colors.red,
+                          ),
+                          side: const BorderSide(
+                            color: Colors.red,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: const Text(
+                          "Reject",
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -270,3 +295,4 @@ class TurfCard extends StatelessWidget {
     );
   }
 }
+

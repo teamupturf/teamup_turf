@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teamup_turf/user/screens/verifynumber_screen.dart';
+import 'package:teamup_turf/user/screens/user_registration_screen.dart';
 
 class PlaySpotsScreen extends StatelessWidget {
   @override
@@ -107,7 +107,7 @@ class PlaySpotsScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VerificationScreen(),
+                            builder: (context) => UserRegistrationScreen(),
                           ),
                         );
                       },

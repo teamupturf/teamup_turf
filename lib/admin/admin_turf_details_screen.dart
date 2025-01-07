@@ -1,35 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:teamup_turf/admin/services/admin_api_services.dart';
 
-
-class TurfDetailsScreen extends StatelessWidget {
-  final String name;
-  final String location;
-  final String contact;
-  final String imageUrl;
-  final String documentUrl;
-  final String fair;
+class TurfDetailsScreen extends StatefulWidget {
+  final String turfId;
   final List<String> timeSlots;
-  final double distance;
-  final double rating;
   final List<String> amenities;
 
   TurfDetailsScreen({
-    required this.name,
-    required this.location,
-    required this.contact,
-    required this.imageUrl,
-    required this.documentUrl,
-    required this.fair,
+    required this.turfId,
     required this.timeSlots,
-    required this.distance,
-    required this.rating,
     required this.amenities,
   });
 
-  // Function to show the image in full-screen with zoom and close button
-  void _showImage(BuildContext context) {
+  @override
+  State<TurfDetailsScreen> createState() => _TurfDetailsScreenState();
+}
+
+class _TurfDetailsScreenState extends State<TurfDetailsScreen> {
+  Future<Map<String, dynamic>> fetchTurfDetails() async {
+    try {
+      return await AdminApiServices().getSingleTurf(turfId: widget.turfId);
+    } catch (e) {
+      throw Exception("Failed to fetch turf details: $e");
+    }
+  }
+
+  void _showImage(BuildContext context, String imageUrl) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -69,7 +67,29 @@ class TurfDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      body: SingleChildScrollView(
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: fetchTurfDetails(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Error: ${snapshot.error}",
+                style: TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text(
+                "No data found",
+                style: TextStyle(fontSize: 16),
+              ),
+            );
+          }
+
+          final turfDetails = snapshot.data!;
+          return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,9 +102,13 @@ class TurfDetailsScreen extends StatelessWidget {
                     bottomRight: Radius.circular(30),
                   ),
                   child: GestureDetector(
-                    onTap: () => _showImage(context), // Show image when tapped
+                    onTap: () => _showImage(context, (turfDetails['imageUrl'] != null && turfDetails['imageUrl'].isNotEmpty)
+      ? turfDetails['imageUrl'][0]
+      : 'https://via.placeholder.com/150',), // Show image when tapped
                     child: Image.network(
-                      imageUrl,
+                       (turfDetails['imageUrl'] != null && turfDetails['imageUrl'].isNotEmpty)
+      ? turfDetails['imageUrl'][0]
+      : 'https://via.placeholder.com/150',
                       width: double.infinity,
                       height: 250,
                       fit: BoxFit.cover,
@@ -121,7 +145,7 @@ class TurfDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        turfDetails['turfName'],
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -134,14 +158,15 @@ class TurfDetailsScreen extends StatelessWidget {
                           Icon(Icons.location_on, color: Colors.red, size: 20),
                           SizedBox(width: 8),
                           Text(
-                            location,
+                            turfDetails['location'],
                             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                           ),
                           SizedBox(width: 20),
                           Icon(Icons.star, color: Colors.yellow[700], size: 20),
                           SizedBox(width: 8),
                           Text(
-                            rating.toStringAsFixed(1),
+                            // rating.toStringAsFixed(1),
+                            '4',
                             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                           ),
                         ],
@@ -167,7 +192,7 @@ class TurfDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              contact,
+                              turfDetails['contact'],
                               style: TextStyle(fontSize: 16),
                             ),
                             Spacer(),
@@ -181,7 +206,7 @@ class TurfDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              "$fair",
+                              turfDetails['fair'],
                               style: TextStyle(
                                 fontSize: 16,
                               ),
@@ -209,7 +234,7 @@ class TurfDetailsScreen extends StatelessWidget {
                         Wrap(
                           spacing: 1,
                           runSpacing: 5,
-                          children: timeSlots.map((slot) {
+                          children:widget.timeSlots.map((slot) {
                             return Chip(
                               label: Text(
                                 slot,
@@ -240,7 +265,7 @@ class TurfDetailsScreen extends StatelessWidget {
                   leading: Icon(Icons.picture_as_pdf, color: Colors.red),
                   title: GestureDetector(
                     onTap: () {
-                      _showImage(context);
+                      _showImage(context, turfDetails['documentUrl']?[0] ?? 'https://via.placeholder.com/150');
                     },
                     child: Text(
                       "View Document",
@@ -256,6 +281,8 @@ class TurfDetailsScreen extends StatelessWidget {
             SizedBox(height: 30),
           ],
         ),
+      );
+        },
       ),
     );
   }

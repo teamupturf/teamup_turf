@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:intl/intl.dart';  // Add intl package for date formatting
+import 'package:intl/intl.dart'; // Add intl package for date formatting
 
 import 'package:teamup_turf/admin/admin_news_details_screen.dart';
+import 'package:teamup_turf/admin/services/admin_api_services.dart';
 
 class NewsUpdateScreen extends StatefulWidget {
   @override
@@ -11,16 +12,16 @@ class NewsUpdateScreen extends StatefulWidget {
 }
 
 class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
-  List<Map<String, dynamic>> newsList = [];
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   File? _selectedImage;
+  bool addNewsLoading = false;
 
   final ImagePicker _picker = ImagePicker();
 
   // Method to pick an image
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -105,8 +106,8 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                _addNews();
+              onPressed: () async {
+                await _addNews();
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
@@ -114,10 +115,14 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
-              ),
+              child: addNewsLoading
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Text(
+                      'Add',
+                      style: TextStyle(color: Colors.white),
+                    ),
             ),
           ],
         );
@@ -126,23 +131,38 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
   }
 
   // Method to add news to the list with current date
-  void _addNews() {
+  Future<void> _addNews() async {
     if (titleController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
         _selectedImage != null) {
-      final String formattedDate = DateFormat('yMMMd').format(DateTime.now());
       setState(() {
-        newsList.add({
-          'title': titleController.text,
-          'description': descriptionController.text,
-          'image': _selectedImage,
-          'date': formattedDate,
-        });
+        addNewsLoading = true;
       });
+
+      try {
+        final result = await AdminApiServices().addNews(
+          title: titleController.text,
+          news: descriptionController.text,
+          image: _selectedImage!,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+      } finally {
+        setState(() {
+          addNewsLoading = false;
+        });
+      }
+
       titleController.clear();
       descriptionController.clear();
       _selectedImage = null;
     }
+  }
+
+  // Future method to fetch news
+  Future<List<dynamic>> _getNews() async {
+    return await AdminApiServices().viewNews();
   }
 
   @override
@@ -154,64 +174,87 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
         backgroundColor: Colors.green[800],
         elevation: 0,
       ),
-      body: Container(
-        decoration: BoxDecoration(
+      body: FutureBuilder<List<dynamic>>(
+        future: _getNews(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No News Available'));
+          }
+
+          final newsList = snapshot.data!;
          
-        ),
-        child: ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemCount: newsList.length,
-          itemBuilder: (context, index) {
-            return Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              elevation: 5,
-              margin: const EdgeInsets.symmetric(vertical: 10.0),
-              child: ListTile(
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: newsList.length,
+            itemBuilder: (context, index) {
+               String dateString = newsList[index]['submittedAt'];  // Example date string
+  
+  // Parse the date string
+  DateTime date = DateTime.parse(dateString);
+  
+  // Format the date and time separately
+  String formattedDate = DateFormat('yyyy-MM-dd').format(date);  // Format for Date
+  String formattedTime = DateFormat('HH:mm:ss').format(date);  // Format for Time
+              return Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NewsDetailsScreen(
-                        title: newsList[index]['title'],
-                        description: newsList[index]['description'],
-                        image: newsList[index]['image'], date: newsList[index]['date'],
-                        onDelete: () {
-                          
-                        },
+                    borderRadius: BorderRadius.circular(20)),
+                elevation: 5,
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewsDetailsScreen(
+                          title: newsList[index]['title'],
+                          description: newsList[index]['news'],
+                          image: newsList[index]['imageUrl'][0],
+                          date: '$formattedDate at $formattedTime',
+                          onDelete: () {
+                            // Implement delete logic if needed
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                },
-                tileColor: Colors.white,
-                contentPadding: const EdgeInsets.all(16.0),
-                leading: newsList[index]['image'] != null
-                    ? Image.file(
-                        newsList[index]['image'],
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                      )
-                    : const Icon(Icons.image, size: 80, color: Colors.grey),
-                title: Text(
-                  newsList[index]['title'],
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.green),
+                    );
+                  },
+                  tileColor: Colors.white,
+                  contentPadding: const EdgeInsets.all(16.0),
+                  leading: newsList[index]['imageUrl'][0] != null
+                      ? Image.network(
+                          newsList[index]['imageUrl'][0],
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        )
+                      : const Icon(Icons.image, size: 80, color: Colors.grey),
+                  title: Text(
+                    newsList[index]['title'],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.green),
+                  ),
+                  subtitle: Text(
+                    '$formattedDate at $formattedTime', // Display the date
+                    style: TextStyle(color: Colors.grey.shade700),
+                  ),
+                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.green.shade800),
                 ),
-                subtitle: Text(
-                  newsList[index]['date'] ?? '',  // Display the date
-                  style: TextStyle(color: Colors.grey.shade700),
-                ),
-                trailing:
-                    Icon(Icons.arrow_forward_ios, color: Colors.green.shade800),
-              ),
-            );
-          },
-        ),
+              );
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddNewsDialog,

@@ -1,15 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:teamup_turf/splash_screen.dart';
+import 'package:teamup_turf/user/services/user_auth_services.dart';
 
-class ProfileViewScreen extends StatelessWidget {
+class ProfileViewScreen extends StatefulWidget {
+  @override
+  State<ProfileViewScreen> createState() => _ProfileViewScreenState();
+}
+
+class _ProfileViewScreenState extends State<ProfileViewScreen> {
   final String profilePicture = 'https://via.placeholder.com/150';
+
   final String username = 'John Doe';
+
   final String phoneNumber = '+1234567890';
+
   final String email = 'johndoe@example.com';
+
   final String gender = 'Male';
+
   final String preferredPosition = 'Midfielder';
+
   final String availability = 'Weekends, Evenings';
+
   final String location = 'New York, USA';
+
   final String experienceLevel = 'Intermediate';
+
+  Future<void> _deleteAccount() async {
+    try{
+      final id = await UserAuthServices().getToken();
+      final result = await UserAuthServices().delete(id: id.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SplashScreen()), (route) => false);
+
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+    // Placeholder function for account deletion logic
+    print('Account deleted!');
+    // Implement account deletion functionality here
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,45 +117,58 @@ class ProfileViewScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
-                // Username Section
+                // Profile Details Sections
                 _buildInfoRow(Icons.person, 'Username', username),
-                const Divider(color: Colors.grey, thickness: 1), // Thin grey divider
+                const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 16),
 
-                // Phone Number Section
                 _buildInfoRow(Icons.phone, 'Phone Number', phoneNumber),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 16),
 
-                // Email Section
                 _buildInfoRow(Icons.email, 'Email', email),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 16),
 
-                // Gender Section
                 _buildInfoRow(Icons.transgender, 'Gender', gender),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 16),
 
-                // Preferred Playing Position Section
                 _buildInfoRow(Icons.sports_soccer, 'Preferred Position', preferredPosition),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 16),
 
-                // Availability Section
                 _buildInfoRow(Icons.access_time, 'Availability', availability),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 16),
 
-                // Location Section
                 _buildInfoRow(Icons.location_on, 'Location', location),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 16),
 
-                // Experience Level Section
                 _buildInfoRow(Icons.star, 'Experience Level', experienceLevel),
                 const Divider(color: Colors.grey, thickness: 1),
                 const SizedBox(height: 24),
+
+                // Delete Button
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      _confirmDeletion(context);
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red, // Red text color
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    child: const Text(
+                      'Delete Account',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -143,4 +196,37 @@ class ProfileViewScreen extends StatelessWidget {
       ],
     );
   }
+
+  // Confirm Deletion Dialog
+  void _confirmDeletion(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Account Deletion'),
+          content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+                _deleteAccount(); // Call delete account function
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, // Red button color
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
 }
